@@ -78,15 +78,58 @@ target = ""
 target_dir = ""
 target_title = ""
 target_extentsion = ""
+#vars - informational special
+target_last = ""
 #vars - safe/security
 true_target = ""
 #vars
+i = 0
 code = ""
 
+#----------------------------------------------------------------
 #Clean folder content
+
 delete_folder_contents(bakePath)
 
+#----------------------------------------------------------------
+#generate tree
+deep = ""
+for root, dirs, files in os.walk(docsPath):
+    for file in files:
+        #basic info
+        true_target = os.path.join(root, file)
+
+        #make relative path
+        target = true_target[len(docsPath):]
+        target_dir = target[0: max(target.rfind('/'), target.rfind("\\")) + 1]
+        target_extentsion = file[file.rfind('.') + 1:].lower()
+        target_title = target[len(target_dir): len(target) - len(target_extentsion) - 1]
+        if len(target_last) == 0:
+            target_last = target_dir
+
+        #MD (HOLY)
+        if target_extentsion == "md":
+            
+            #check if entering new folder
+            if target_last != target_dir:
+                #calculate deep
+                i = target_dir.count("/") + target_dir.count("\\")
+                deep = ""
+                while i > 0:
+                    deep += "  "
+                    i -= 1
+                print(deep + target_dir[target_dir[0:-1].rfind("\\") + 1:-1] + ":")
+            print(deep + "  -" + target_title)
+
+        #update last dir
+        target_last = target_dir
+
+
+
+
+#----------------------------------------------------------------
 #scan each file
+
 for root, dirs, files in os.walk(docsPath):
     for file in files:
         #basic info
@@ -117,5 +160,8 @@ for root, dirs, files in os.walk(docsPath):
             
             #write
             write_to_file(target, markdown_to_html(code))
+
+#----------------------------------------------------------------
 #end
+
 print("Finished!")
