@@ -43,11 +43,14 @@ def read_file_into_string(file_path):
         print(f"Error reading file: {e}")
         return None
 
-def write_to_file_direct(file_path, data):
+def make_dir_by_filepath(file_path):
     #safely create directory
-    file_dir = file_path[0: max(file_path.rfind('/'), file_path.rfind("\\"))]
-    if not os.path.exists(file_dir):
-        os.makedirs(file_dir)
+    file_path = file_path[0: max(file_path.rfind('/'), file_path.rfind("\\"))]
+    if not os.path.exists(file_path):
+        os.makedirs(file_path)
+
+def write_to_file_direct(file_path, data):
+    make_dir_by_filepath(file_path)
     #write to file
     try:
         with open(file_path, 'a+') as file:
@@ -62,6 +65,23 @@ def write_to_file(rel_path, data):
 def read_this_file():
     return read_file_into_string(true_target)
 
+def load_text_resource(rel_path):
+    return read_file_into_string(resPath + rel_path)
+
+def copy_file_with_os(source_path, destination_path):
+    try:
+        with open(source_path, 'rb') as source_file:
+            with open(destination_path, 'wb') as destination_file:
+                # Read the content of the source file and write it to the destination file
+                content = source_file.read()
+                destination_file.write(content)
+    except Exception as e:
+        print(f"Error copying file: {e}")
+
+def copy_res_to_bake(rel_res_path, rel_bake_path):
+    make_dir_by_filepath(bakePath + rel_bake_path)
+    copy_file_with_os(resPath + rel_res_path, bakePath + rel_bake_path)
+
 #================================================================
 #Main
 
@@ -70,9 +90,9 @@ if os.system('clear'):
     os.system('cls')
 
 #Consts
-bakePath = "bake"
-setsPath = "sets"
-docsPath = "docs"
+bakePath = "bake/"
+resPath = "res/"
+docsPath = "docs/"
 #vars - informational
 target = ""
 target_dir = ""
@@ -90,6 +110,17 @@ code = ""
 #Clean folder content
 
 delete_folder_contents(bakePath)
+
+#----------------------------------------------------------------
+#Copy consts
+
+copy_res_to_bake('index.js','index.js')
+copy_res_to_bake('index.css','index.css')
+
+#----------------------------------------------------------------
+#Read patterns
+
+pat_page = [load_text_resource('page_1.html'), load_text_resource('page_2.html'), load_text_resource('page_3.html')]
 
 #----------------------------------------------------------------
 #generate tree
@@ -124,9 +155,6 @@ for root, dirs, files in os.walk(docsPath):
         #update last dir
         target_last = target_dir
 
-
-
-
 #----------------------------------------------------------------
 #scan each file
 
@@ -159,7 +187,11 @@ for root, dirs, files in os.walk(docsPath):
             code = read_this_file()
             
             #write
+            write_to_file(target, pat_page[0])
+            #tree
+            write_to_file(target, pat_page[1])
             write_to_file(target, markdown_to_html(code))
+            write_to_file(target, pat_page[2])
 
 #----------------------------------------------------------------
 #end
