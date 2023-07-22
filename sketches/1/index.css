@@ -1,0 +1,97 @@
+body, html {
+    margin: 0;
+    padding: 0;
+    height: 100%;
+}
+/*
+================================================
+|                                              |
+|                     Navbar                   |
+|                                              |
+================================================
+*/
+
+#navbar{
+    background-color: #262626;
+    padding: 8px 16px;
+    color: #FFFFFF;
+    text-align: center;
+}
+
+
+/*
+================================================
+|                                              |
+|                     Panel                    |
+|                                              |
+================================================
+*/
+
+#panel{
+    display: flex;
+    max-height: 100%;
+    overflow: hidden;
+
+    background-color: #171717;
+}
+
+/*
+================================================
+|                                              |
+|                  Navigation                  |
+|                                              |
+================================================
+*/
+
+#navigation{
+    width: 20%;
+    overflow-y: auto; /* Add vertical scrollbar if content exceeds sidebar height */
+}
+
+#navigation li{
+    background-color: aqua;
+}#navigation li:hover{
+    background-color: blue;
+}
+
+#navigation li > a:nth-child(2){
+    float: right;
+    margin-right: 1rem;
+}
+
+/*
+================================================
+|                                              |
+|                    Content                   |
+|                                              |
+================================================
+*/
+
+#content{
+    padding: 20px;
+    max-height: 100%; /* Set a maximum height to avoid content overflow */
+    overflow-y: auto; /* Add vertical scrollbar if content exceeds max height */
+
+    width: 80%;
+    color: rgb(213, 215, 216);
+}
+
+#content h1, #content h2, #content h3{
+    color: rgb(255, 255, 255);
+}
+
+#content a{
+    color: rgb(108, 187, 255);
+    text-decoration: none;
+}#content a:hover{
+    color: rgb(181, 220, 255);
+}
+
+
+/*
+================================================
+|                                              |
+|                     Misc                     |
+|                                              |
+================================================
+*/
