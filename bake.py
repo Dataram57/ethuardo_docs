@@ -43,6 +43,17 @@ def read_file_into_string(file_path):
         print(f"Error reading file: {e}")
         return None
 
+def read_file_into_array(file_path):
+    try:
+        with open(file_path, 'r') as file:
+            lines_array = file.readlines()
+        return lines_array
+    except Exception as e:
+        return None
+
+def get_name_by_path(path):
+    return path[max(path.rfind('/'), path.rfind("\\")) + 1:]
+
 def make_dir_by_filepath(file_path):
     #safely create directory
     file_path = file_path[0: max(file_path.rfind('/'), file_path.rfind("\\"))]
@@ -82,6 +93,106 @@ def copy_res_to_bake(rel_res_path, rel_bake_path):
     make_dir_by_filepath(bakePath + rel_bake_path)
     copy_file_with_os(resPath + rel_res_path, bakePath + rel_bake_path)
 
+def get_files_and_folders(directory):
+    files_list = []
+    folders_list = []
+
+    # Get a list of all items (files and folders) within the directory
+    items_list = os.listdir(directory)
+
+    # Separate files and folders
+    for item in items_list:
+        item_path = os.path.join(directory, item)
+        if os.path.isfile(item_path):
+            files_list.append(item_path)
+        elif os.path.isdir(item_path):
+            folders_list.append(item_path)
+
+    return files_list, folders_list
+
+def cut_path_by_docs_path(path):
+    return path[len(docsPath):]
+
+def get_markdown_title(file_path):
+    print(file_path)
+    try:
+        with open(docsPath + file_path, 'r') as file:
+            return file.readline().strip()
+    except Exception as e:
+        print(f"Error reading file: {e}")
+        return None
+
+#================================================================
+#Tree generation Mechanisms
+tree_data = ""
+tree_start = ""
+tree_end = ""
+
+def print_deep(target_dir, space, message):
+    i = target_dir.count("/") + target_dir.count("\\")
+    deep = ""
+    while i > 0:
+        deep += space
+        i -= 1
+    print(deep, message)
+
+def generate_tree(file_path):
+    #start building tree
+    global tree_data, tree_start, tree_end
+    tree_data += tree_start
+
+    #try to load .hierarchy
+    hierarchy = read_file_into_array(file_path + '.hierarchy')
+    if hierarchy is not None:
+        for line in hierarchy:
+            line = line.strip().strip()
+
+            # Comment (#)
+            if line[0] == '#':
+                line = line[1:].strip()
+                print_deep(file_path, '  ', '# ' + line)
+                tree_data += render_comment(line)
+
+            # Folder (/)
+            elif line[0] == '/':
+                line = line[1:].strip()
+                print_deep(file_path, '  ', 'V ' + line)
+                line = file_path + line + '/'
+                tree_data += render_folder_begin(cut_path_by_docs_path(line)) 
+                #render another branch
+                generate_tree(line)
+                #end branch
+                tree_data += render_folder_end() 
+            
+            # Etc... (...)
+            elif line == '...':
+                print_deep(file_path, '  ', '# Etc...')
+
+            #Any other
+            else:
+                print_deep(file_path, '  ', '| ' + line)
+                tree_data += render_option(cut_path_by_docs_path(file_path + line))
+    
+    #tree normally
+    else:
+        files, folders = get_files_and_folders(file_path)
+        #files first
+        for file in files:
+            print_deep(file_path, '  ', '| ' + get_name_by_path(file))
+            tree_data += render_option(cut_path_by_docs_path(file))
+        #folders
+        for folder in folders:
+            print_deep(file_path, '  ', 'V ' + get_name_by_path(folder))
+            folder += '/'
+            tree_data += render_folder_begin(cut_path_by_docs_path(folder))
+            #render another branch
+            generate_tree(folder)
+            #end branch
+            tree_data += render_folder_end() 
+    
+    #end tree
+    tree_data += tree_end
+
 #================================================================
 #Main
 
@@ -118,45 +229,35 @@ copy_res_to_bake('index.js','index.js')
 copy_res_to_bake('index.css','index.css')
 
 #----------------------------------------------------------------
-#Read patterns
+#Read patterns and define its functions
 
 pat_page = [load_text_resource('page_1.html'), load_text_resource('page_2.html'), load_text_resource('page_3.html')]
+pat_folder = [load_text_resource('folder_1.html'), load_text_resource('folder_2.html'), load_text_resource('folder_3.html'), load_text_resource('folder_4.html')]
+pat_option = [load_text_resource('option_1.html'), load_text_resource('option_2.html'), load_text_resource('option_3.html')]
+pat_comment = [load_text_resource('comment_1.html'), load_text_resource('comment_2.html')]
+
+tree_start = '<ul>'
+tree_end = '</ul>'
+
+def render_folder_begin(folder_path):
+    return pat_folder[0] + get_markdown_title(folder_path + 'index.md') + pat_folder[1] + folder_path + pat_folder[2]
+
+def render_folder_end():
+    return pat_folder[3]
+
+def render_option(file_path):
+    return pat_option[0] + file_path + pat_option[1] + get_markdown_title(file_path) + pat_option[2]
+
+def render_comment(header):
+    return pat_comment[0] + header + pat_comment[1]
 
 #----------------------------------------------------------------
-#generate tree
-deep = ""
-for root, dirs, files in os.walk(docsPath):
-    for file in files:
-        #basic info
-        true_target = os.path.join(root, file)
+#Generate tree
 
-        #make relative path
-        target = true_target[len(docsPath):]
-        target_dir = target[0: max(target.rfind('/'), target.rfind("\\")) + 1]
-        target_extentsion = file[file.rfind('.') + 1:].lower()
-        target_title = target[len(target_dir): len(target) - len(target_extentsion) - 1]
-        if len(target_last) == 0:
-            target_last = target_dir
-
-        #MD (HOLY)
-        if target_extentsion == "md":
-            
-            #check if entering new folder
-            if target_last != target_dir:
-                #calculate deep
-                i = target_dir.count("/") + target_dir.count("\\")
-                deep = ""
-                while i > 0:
-                    deep += "  "
-                    i -= 1
-                print(deep + target_dir[target_dir[0:-1].rfind("\\") + 1:-1] + ":")
-            print(deep + "  -" + target_title)
-
-        #update last dir
-        target_last = target_dir
+generate_tree(docsPath)
 
 #----------------------------------------------------------------
-#scan each file
+#Scan each file
 
 for root, dirs, files in os.walk(docsPath):
     for file in files:
@@ -188,7 +289,7 @@ for root, dirs, files in os.walk(docsPath):
             
             #write
             write_to_file(target, pat_page[0])
-            #tree
+            write_to_file(target, tree_data)
             write_to_file(target, pat_page[1])
             write_to_file(target, markdown_to_html(code))
             write_to_file(target, pat_page[2])

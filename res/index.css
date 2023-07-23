@@ -35,6 +35,7 @@ html, body{
     display: flex;
     overflow: hidden;
     background-color: #171717;
+    height: 100vh;
 }
 
 #panel > div{
@@ -76,10 +77,14 @@ html, body{
     color: #FFFFFF;
 }
 
-
 #explorer li > a:nth-child(2){
     float: right;
     margin-right: 1rem;
+}
+
+#explorer li > label{
+    color: #0bb00d;
+    font-style: italic;
 }
 
 /*
