@@ -93,6 +93,35 @@ def copy_res_to_bake(rel_res_path, rel_bake_path):
     make_dir_by_filepath(bakePath + rel_bake_path)
     copy_file_with_os(resPath + rel_res_path, bakePath + rel_bake_path)
 
+def copy_folder(src_folder, dest_folder):
+    try:
+        # Create the destination folder if it doesn't exist
+        if not os.path.exists(dest_folder):
+            os.makedirs(dest_folder)
+
+        for root, _, files in os.walk(src_folder):
+            relative_path = os.path.relpath(root, src_folder)
+            dest_dir = os.path.join(dest_folder, relative_path)
+
+            # Create the corresponding destination subdirectory if it doesn't exist
+            if not os.path.exists(dest_dir):
+                os.makedirs(dest_dir)
+
+            for file_name in files:
+                src_file = os.path.join(root, file_name)
+                dest_file = os.path.join(dest_dir, file_name)
+
+                # Copy the file from the source to the destination directory
+                copy_file_with_os(src_file, dest_file)
+    except OSError as e:
+        print(f"Error: {e}")
+
+def copy_res_folder_to_bake(rel_res_path, rel_bake_path):
+    copy_folder(resPath + rel_res_path, bakePath + rel_bake_path)
+
+def copy_docs_folder_to_bake(rel_res_path, rel_bake_path):
+    copy_folder(docsPath + rel_res_path, bakePath + rel_bake_path)
+
 def get_files_and_folders(directory):
     files_list = []
     folders_list = []
@@ -114,10 +143,9 @@ def cut_path_by_docs_path(path):
     return path[len(docsPath):]
 
 def get_markdown_title(file_path):
-    print(file_path)
     try:
         with open(docsPath + file_path, 'r') as file:
-            return file.readline().strip()
+            return file.readline()[2:].strip()
     except Exception as e:
         print(f"Error reading file: {e}")
         return None
@@ -166,7 +194,7 @@ def generate_tree(file_path):
             
             # Etc... (...)
             elif line == '...':
-                print_deep(file_path, '  ', '# Etc...')
+                print_deep(file_path, '  ', '...Etc...')
 
             #Any other
             else:
@@ -179,7 +207,8 @@ def generate_tree(file_path):
         #files first
         for file in files:
             print_deep(file_path, '  ', '| ' + get_name_by_path(file))
-            tree_data += render_option(cut_path_by_docs_path(file))
+            if get_name_by_path(file).lower() != 'index.md':
+                tree_data += render_option(cut_path_by_docs_path(file))
         #folders
         for folder in folders:
             print_deep(file_path, '  ', 'V ' + get_name_by_path(folder))
@@ -199,6 +228,7 @@ def generate_tree(file_path):
 #clear console
 if os.system('clear'):
     os.system('cls')
+print("Started...")
 
 #Consts
 bakePath = "bake/"
@@ -227,6 +257,7 @@ delete_folder_contents(bakePath)
 
 copy_res_to_bake('index.js','index.js')
 copy_res_to_bake('index.css','index.css')
+copy_docs_folder_to_bake('img','img')
 
 #----------------------------------------------------------------
 #Read patterns and define its functions
@@ -240,13 +271,13 @@ tree_start = '<ul>'
 tree_end = '</ul>'
 
 def render_folder_begin(folder_path):
-    return pat_folder[0] + get_markdown_title(folder_path + 'index.md') + pat_folder[1] + folder_path + pat_folder[2]
+    return pat_folder[0] + get_markdown_title(folder_path + 'index.md') + pat_folder[1] + '/' + folder_path + pat_folder[2]
 
 def render_folder_end():
     return pat_folder[3]
 
 def render_option(file_path):
-    return pat_option[0] + file_path + pat_option[1] + get_markdown_title(file_path) + pat_option[2]
+    return pat_option[0] + '/' + file_path[:-3] + '/' + pat_option[1] + get_markdown_title(file_path) + pat_option[2]
 
 def render_comment(header):
     return pat_comment[0] + header + pat_comment[1]
