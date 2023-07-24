@@ -7,6 +7,9 @@
 */
 
 const ToggleFolder = (header) => {
-    const tag = header.parentNode.children[2];
-    tag.hidden = !tag.hidden;
+    //css
+    header.classList.toggle('folder-opened');
+    //hide/show
+    header = header.parentNode.lastElementChild;
+    header.hidden = !header.hidden;
 };

@@ -85,6 +85,16 @@ html, body{
 #explorer li > label{
     color: #0bb00d;
     font-style: italic;
+    font-weight: bold;
+}
+
+#explorer li > .folder{
+    color: #478b71;
+    font-weight: bold;
+}
+#explorer li > .folder-opened{
+    font-style: italic;
+    color: #69d2aa;
 }
 
 /*
