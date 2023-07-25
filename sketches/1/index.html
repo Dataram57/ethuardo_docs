@@ -12,12 +12,14 @@
     <body>
         <div id="panel">
             <div id="panel-left" class="responsive-screen">
+                <div class="mobile-burger">
+                    <a href="javascript:void(0)" onclick="MobileBurgerClick()"><img src="burger.svg"></img></a>
+                    <div></div>
+                </div>
                 <div id="logo">
-                    <header>Ethuardo - Documentation</header>
+                    <header>Ethuardo Documentation</header>
                     <div>
-                        <!--====| CUT HERE |====-->
-                        Version 0.1.4
-                        <!--====| CUT HERE |====-->
+                        Version 0.6.2
                     </div>
                     <a href="https://ethuardo.com/">Exit...</a>
                 </div>
@@ -52,8 +54,11 @@
             </div>
             <div id="panel-middle" class="responsive-screen">
                 <div id="mobile-navbar" class="responsive-screen">
-                    <a href="javascript:void(0)" onclick="MobileBurgerClick()"><img src="burger.svg"></img></a>
+                    <div class="mobile-burger">
+                        <a href="javascript:void(0)" onclick="MobileBurgerClick()"><img src="burger.svg"></img></a>
+                    </div>
                 </div>
+                <div id="mobile-break" class="responsive-screen"></div>
                 <div id="content-path">
                     <a>main</a>
                     &gt; <a>A</a>

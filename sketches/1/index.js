@@ -1,6 +1,10 @@
 window.onload = () => {
-    //Init responsivness and events
+    //Init responsivness
     InitResponsive();
+    //Navigate to the currently opened document
+    Navigate();
+    //Generate sections of the document
+    RenderSections();
 };
 
 /*
@@ -67,6 +71,10 @@ const ToggleFolder = (header) => {
     header.hidden = !header.hidden;
 };
 
+const Navigate = () => {
+    console.log(window.location.pathname);
+};
+
 /*
 ================================================
 |                                              |
@@ -78,11 +86,26 @@ const ToggleFolder = (header) => {
 const MobileBurgerClick = () => {
     const mobileNavbar = document.getElementById('mobile-navbar');
     const panelLeft = document.getElementById('panel-left');
+    const panelMiddle = document.getElementById('panel-middle');
     if(mobileNavbar.classList.contains('mobile')){
         panelLeft.classList.remove('mobile');
         mobileNavbar.classList.remove('mobile');
+        panelMiddle.classList.remove('mobile');
     }else{
         panelLeft.classList.add('mobile');
         mobileNavbar.classList.add('mobile');
+        panelMiddle.classList.add('mobile');
     }
+};
+
+/*
+================================================
+|                                              |
+|                   Sections                   |
+|                                              |
+================================================
+*/
+
+const RenderSections = () => {
+    
 };

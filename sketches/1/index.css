@@ -23,6 +23,7 @@ html, body{
 }
 
 #panel-left{
+    padding: 0.5rem;
     width: 25%;
     overflow-y: auto; /* Add vertical scrollbar if content exceeds sidebar height */
     border-right: solid 0.1rem #ffffff30;
@@ -39,6 +40,8 @@ html, body{
 #panel-left.screen-sm.mobile
 ,#panel-left.screen-xs.mobile{
     display: block;
+    height: 100%;
+    border-right: none;
 }
 
 #panel-middle{
@@ -48,6 +51,11 @@ html, body{
 }#panel-middle.screen-sm
 ,#panel-middle.screen-xs{
     width: 100%;
+}
+
+#panel-middle.screen-sm.mobile
+,#panel-middle.screen-xs.mobile{
+    display: none;
 }
 
 #panel-right{
@@ -150,16 +158,76 @@ html, body{
 
 #mobile-navbar{
     position: fixed;
+    padding: 0.5rem;
     width: 100%;
-    max-width: 7rem;
-    background-color: #54a686;
+    background-color: #121212;
     display: none;
 }#mobile-navbar.screen-xs
 ,#mobile-navbar.screen-sm{
-    display: block;
+    display: flex;
 }
 #mobile-navbar.mobile{
     display: none;
+}
+
+#mobile-navbar header{
+    font-size: 2.5rem;
+    color: rgb(255, 255, 255);
+    width: 100%;
+    text-align: right;
+}
+
+#mobile-navbar.screen-xs header{
+    font-size: 1.5rem;
+}
+
+/*
+================================================
+|                                              |
+|                 Mobile Burger                |
+|                                              |
+================================================
+*/
+
+.mobile-burger{
+    float: left;
+    width: 100%;
+    display: none;
+}
+
+.mobile-burger img{
+    width: 100%;
+    max-width: 2.5rem;
+    margin: 0.5rem;
+}
+
+.screen-sm .mobile-burger img{
+    max-width: 3.5rem;
+    margin: 0.5rem;
+}
+
+.screen-sm .mobile-burger
+,.screen-xs .mobile-burger{
+    display: block;
+}
+
+.mobile-burger > div{
+    width: 100%;
+    border-bottom: solid 0.1rem #ffffff64;
+}
+
+/*
+================================================
+|                                              |
+|                 Mobile Break                 |
+|                                              |
+================================================
+*/
+
+#mobile-break.screen-sm{
+    padding-top: 6rem;
+}#mobile-break.screen-xs{
+    padding-top: 5rem;
 }
 
 /*
@@ -173,6 +241,11 @@ html, body{
 #content-path{
     padding: 20px 3rem;
     color: white;
+    font-size: larger;
+}
+
+.screen-xs > #content-path{
+    padding: 10px 1.5rem;
 }
 
 #content-path > a{
@@ -196,6 +269,10 @@ html, body{
 #content{
     padding: 20px 3rem;
     color: rgb(213, 215, 216);
+}
+
+.screen-xs > #content{
+    padding: 10px 1.5rem;
 }
 
 #content h1, #content h2, #content h3{
