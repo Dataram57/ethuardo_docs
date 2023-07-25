@@ -304,6 +304,28 @@ html, body{
 #content-navigation > li::marker{
 }
 
+#content-navigation > li > a{
+    color: white;
+    text-decoration: none;
+}#content-navigation > li > a:hover{
+    color: #b8fee5;
+    background-color: #b8fee51f;
+}
+
+#content-navigation .section-h1{
+    font-size: larger;
+    border-bottom: solid 0.1rem #b0b0b0;
+}
+
+#content-navigation .section-h2 > a{
+    color: #b7b7b7;
+}
+
+#content-navigation .section-h3 > a{
+    font-size: smaller;
+    color: #9c9c9c;
+}
+
 /*
 ================================================
 |                                              |

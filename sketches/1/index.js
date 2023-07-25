@@ -125,9 +125,9 @@ const UpdateContentPath = (url) => {
 */
 
 const renderSectionClassNames = {
-    h1: 'info-h1'
-    ,h2: 'info-h2'
-    ,h3: 'info-h3'
+    h1: 'section-h1'
+    ,h2: 'section-h2'
+    ,h3: 'section-h3'
 };
 const sectionSymbolsToReplace = [
     [' ', '-']
