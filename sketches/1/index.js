@@ -2,7 +2,9 @@ window.onload = () => {
     //Init responsivness
     InitResponsive();
     //Navigate to the currently opened document
-    Navigate();
+    ExplorerNavigate();
+    //Update content-path
+    UpdateContentPath();
     //Generate sections of the document
     RenderSections();
 };
@@ -57,27 +59,6 @@ const InitResponsive = () => {
 /*
 ================================================
 |                                              |
-|                  Navigation                  |
-|                                              |
-================================================
-*/
-
-const ToggleFolder = (header) => {
-    header = header.parentNode;
-    //css
-    header.classList.toggle('folder-opened');
-    //hide/show
-    header = header.lastElementChild;
-    header.hidden = !header.hidden;
-};
-
-const Navigate = () => {
-    console.log(window.location.pathname);
-};
-
-/*
-================================================
-|                                              |
 |                 Mobile Burger                |
 |                                              |
 ================================================
@@ -101,11 +82,99 @@ const MobileBurgerClick = () => {
 /*
 ================================================
 |                                              |
+|                   Explorer                   |
+|                                              |
+================================================
+*/
+
+const ToggleFolder = (header) => {
+    header = header.parentNode;
+    //css
+    header.classList.toggle('folder-opened');
+    //hide/show
+    header = header.lastElementChild;
+    header.hidden = !header.hidden;
+};
+
+const ExplorerNavigate = (url) => {
+    if(!url)
+        url = window.location.pathname;
+    console.log(url);
+};
+
+/*
+================================================
+|                                              |
+|                 Content-Path                 |
+|                                              |
+================================================
+*/
+
+const UpdateContentPath = (url) => {
+    if(!url)
+        url = window.location.pathname;
+    console.log(url);
+};
+
+/*
+================================================
+|                                              |
 |                   Sections                   |
 |                                              |
 ================================================
 */
 
+const renderSectionClassNames = {
+    h1: 'info-h1'
+    ,h2: 'info-h2'
+    ,h3: 'info-h3'
+};
+const sectionSymbolsToReplace = [
+    [' ', '-']
+    ,["\n", '-']
+];
+
+const ToSectionName = (text) => {
+    text = text.toLowerCase();
+    while(text.length != (text = text.trim()).length);
+    let i = sectionSymbolsToReplace.length;
+    while(--i > -1)
+        text = text.replaceAll(sectionSymbolsToReplace[i][0],sectionSymbolsToReplace[i][1]);
+    return text;
+};
+
 const RenderSections = () => {
-    
+    const tag = document.getElementById('content-navigation');
+    const children = document.getElementById('content').children;
+    const usedSectionNames = {};
+    let f = 0;
+    let sectionName = '';
+    let lastSectionIndex = 1;
+    let className = '';
+    let section = null
+    for(let i = 0; i < children.length; i++){
+        className = renderSectionClassNames[children[i].tagName.toLowerCase()];
+        if(className){
+            section = document.createElement("a");
+            section.classList.add('section');
+            
+            //create a correct unique and systematic section name
+            sectionName = ToSectionName(children[i].textContent)
+            if(usedSectionNames[sectionName] !== undefined)
+                lastSectionIndex = ++usedSectionNames[sectionName];
+            else{
+                lastSectionIndex = 1;
+                usedSectionNames[sectionName] = lastSectionIndex;
+            }
+            console.log(lastSectionIndex);
+            //convert to usable
+            if(lastSectionIndex > 1)
+                sectionName += '_' + lastSectionIndex.toString();
+
+            //assign this name
+            section.setAttribute('name', sectionName)
+            children[i].appendChild(section);
+            tag.innerHTML += '<li class="' + className + '"><a href="#' + sectionName + '">' + children[i].textContent + '</a></li>';
+        }
+    }
 };

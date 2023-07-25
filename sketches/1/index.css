@@ -59,9 +59,10 @@ html, body{
 }
 
 #panel-right{
+    border-left: solid 0.1rem #ffffff30;
     width: 15%;
     color:white;
-    background-color: #6a54a6;
+    background-color: #121212;
 }#panel-right.screen-md
 ,#panel-right.screen-sm
 ,#panel-right.screen-xs{
@@ -157,11 +158,12 @@ html, body{
 */
 
 #mobile-navbar{
-    position: fixed;
+    position: absolute;
     padding: 0.5rem;
     width: 100%;
     background-color: #121212;
     display: none;
+    border-bottom: solid 0.2rem #ffffff22;
 }#mobile-navbar.screen-xs
 ,#mobile-navbar.screen-sm{
     display: flex;
@@ -295,5 +297,37 @@ html, body{
 */
 
 #content-navigation{
-    width: 10%;
+    color: white;
+    list-style: none;
+}
+
+#content-navigation > li::marker{
+}
+
+/*
+================================================
+|                                              |
+|                     Misc                     |
+|                                              |
+================================================
+*/
+
+/*================================================
+scroll-cool
+*/
+
+.scroll-cool::-webkit-scrollbar {
+	width: 0.3rem;
+	background-color: #f5f5f500;
+}
+
+.scroll-cool::-webkit-scrollbar-thumb {
+	/*border-radius: 10px;*/
+	-webkit-box-shadow: inset 0 0 6px rgba(0, 0, 0, 0.1);
+    border: 1rem solid #ffffff66;
+    border-radius: 2rem;
+}
+
+.scroll-cool{
+	scrollbar-color: #ffffff66 #ffffffb6;
 }
