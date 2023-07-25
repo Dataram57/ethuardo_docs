@@ -257,6 +257,7 @@ delete_folder_contents(bakePath)
 
 copy_res_to_bake('index.js','index.js')
 copy_res_to_bake('index.css','index.css')
+copy_res_to_bake('burger.svg','burger.svg')
 copy_docs_folder_to_bake('img','img')
 
 #----------------------------------------------------------------

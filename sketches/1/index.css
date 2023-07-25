@@ -53,6 +53,10 @@ html, body{
     width: 100%;
 }
 
+#panel-middle *{
+    max-width: 100%;
+}
+
 #panel-middle.screen-sm.mobile
 ,#panel-middle.screen-xs.mobile{
     display: none;
