@@ -96,10 +96,52 @@ const ToggleFolder = (header) => {
     header.hidden = !header.hidden;
 };
 
-const ExplorerNavigate = (url) => {
-    if(!url)
-        url = window.location.pathname;
-    console.log(url);
+const ScanAllElementsInside = (element, func_element) => {
+    const tree = [element];
+    let i = 0;
+    while(i >= 0){
+        //check
+        if(func_element(tree[i]))
+            return;
+        //in
+        if(tree[i].firstElementChild)
+            tree.push(tree[i++].firstElementChild);
+        else
+            while(i >= 0){
+                //next
+                tree[i] = tree[i].nextElementSibling;
+                if(tree[i])
+                    break;
+                else{
+                    tree.pop();
+                    i--;
+                }
+            }
+    }
+};
+
+const ExplorerNavigate = (path) => {
+    if(!path)
+        path = window.location.pathname;
+    const mainParent = document.getElementById('explorer').firstElementChild;
+    let href = '';
+    ScanAllElementsInside(mainParent, element => {
+        href = element.getAttribute('href');
+        if(href)
+            if(href == path){
+                //found element with this path
+                element = element.parentElement;
+                element.classList.add('visit')
+                while(element != mainParent){
+                    element = element.parentElement;
+                    if(element.firstElementChild)
+                        if(element.firstElementChild.classList.contains('folder'))
+                            element.firstElementChild.click();
+                }
+                //end scanning
+                return true;
+            }
+    });
 };
 
 /*
@@ -110,10 +152,17 @@ const ExplorerNavigate = (url) => {
 ================================================
 */
 
-const UpdateContentPath = (url) => {
-    if(!url)
-        url = window.location.pathname;
-    console.log(url);
+const UpdateContentPath = (path) => {
+    const tag = document.getElementById('content-path');
+    if(!path)
+        path = window.location.pathname;
+    const routes = path.split('/');
+    let length = 0;
+    for(let i = 0; i < routes.length; i++){
+        if(routes[i].length > 0){
+            tag.innerHTML += ((length > 0) ? '&gt;' : '') + '<a href="' + path.substring(0, (length += routes[i].length + 1)) + '">' + routes[i] + '</a>';
+        }
+    }
 };
 
 /*

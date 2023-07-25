@@ -131,6 +131,10 @@ html, body{
     margin-right: 1rem;
 }
 
+#explorer li.visit{
+    background-color: #69d2aa48;
+}
+
 #explorer .header{
     color: #69d2aa;
     font-size: larger;
@@ -203,7 +207,7 @@ html, body{
 
 .mobile-burger img{
     width: 100%;
-    max-width: 2.5rem;
+    max-width: 2.5rem !important;
     margin: 0.5rem;
 }
 
@@ -248,6 +252,10 @@ html, body{
     padding: 20px 3rem;
     color: white;
     font-size: larger;
+}
+
+#content-path > *{
+    display: inline-block;
 }
 
 .screen-xs > #content-path{

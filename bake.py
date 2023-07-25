@@ -155,19 +155,21 @@ def get_markdown_title(file_path):
 tree_data = ""
 tree_start = ""
 tree_end = ""
+tree_deep_level = 0
+tree_print_space = '  '
+tree_print_deep_space = ''
 
-def print_deep(target_dir, space, message):
-    i = target_dir.count("/") + target_dir.count("\\")
-    deep = ""
-    while i > 0:
-        deep += space
-        i -= 1
-    print(deep, message)
+def print_tree_deep(message):
+    global tree_deep_level, tree_print_deep_space
+    print(tree_print_deep_space, message)
 
 def generate_tree(file_path):
     #start building tree
-    global tree_data, tree_start, tree_end
-    tree_data += tree_start
+    global tree_data, tree_start, tree_end, tree_deep_level, tree_print_deep_space, tree_print_space
+    if tree_deep_level == 0:
+        tree_data += tree_start
+    tree_deep_level += 1
+    tree_print_deep_space += tree_print_space
 
     #try to load .hierarchy
     hierarchy = read_file_into_array(file_path + '.hierarchy')
@@ -178,13 +180,13 @@ def generate_tree(file_path):
             # Comment (#)
             if line[0] == '#':
                 line = line[1:].strip()
-                print_deep(file_path, '  ', '# ' + line)
+                print_tree_deep('# ' + line)
                 tree_data += render_comment(line)
 
             # Folder (/)
             elif line[0] == '/':
                 line = line[1:].strip()
-                print_deep(file_path, '  ', 'V ' + line)
+                print_tree_deep('V ' + line)
                 line = file_path + line + '/'
                 tree_data += render_folder_begin(cut_path_by_docs_path(line)) 
                 #render another branch
@@ -194,11 +196,11 @@ def generate_tree(file_path):
             
             # Etc... (...)
             elif line == '...':
-                print_deep(file_path, '  ', '...Etc...')
+                print_tree_deep('...Etc...')
 
             #Any other
             else:
-                print_deep(file_path, '  ', '| ' + line)
+                print_tree_deep('| ' + line)
                 tree_data += render_option(cut_path_by_docs_path(file_path + line))
     
     #tree normally
@@ -206,12 +208,12 @@ def generate_tree(file_path):
         files, folders = get_files_and_folders(file_path)
         #files first
         for file in files:
-            print_deep(file_path, '  ', '| ' + get_name_by_path(file))
+            print_tree_deep('| ' + get_name_by_path(file))
             if get_name_by_path(file).lower() != 'index.md':
                 tree_data += render_option(cut_path_by_docs_path(file))
         #folders
         for folder in folders:
-            print_deep(file_path, '  ', 'V ' + get_name_by_path(folder))
+            print_tree_deep('V ' + get_name_by_path(folder))
             folder += '/'
             tree_data += render_folder_begin(cut_path_by_docs_path(folder))
             #render another branch
@@ -220,7 +222,10 @@ def generate_tree(file_path):
             tree_data += render_folder_end() 
     
     #end tree
-    tree_data += tree_end
+    tree_deep_level -= 1
+    tree_print_deep_space = tree_print_deep_space[:-len(tree_print_space)]
+    if tree_deep_level == 0:
+        tree_data += tree_end
 
 #================================================================
 #Main
