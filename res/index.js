@@ -166,7 +166,6 @@ const RenderSections = () => {
                 lastSectionIndex = 1;
                 usedSectionNames[sectionName] = lastSectionIndex;
             }
-            console.log(lastSectionIndex);
             //convert to usable
             if(lastSectionIndex > 1)
                 sectionName += '_' + lastSectionIndex.toString();
