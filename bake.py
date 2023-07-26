@@ -2,6 +2,7 @@
 #libs
 
 import os
+import hashlib
 import markdown
 
 #================================================================
@@ -326,7 +327,8 @@ for root, dirs, files in os.walk(docsPath):
                 target += ".html"
             else:
                 target += "/index.html"
-            
+            target = target.replace("\\",'/')
+
             #read file
             code = read_this_file()
             title = get_this_markdown_title()
