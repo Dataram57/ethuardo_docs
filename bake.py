@@ -74,6 +74,7 @@ def write_to_file(rel_path, data):
     write_to_file_direct(bakePath + rel_path, data)
 
 def read_this_file():
+    global true_target
     return read_file_into_string(true_target)
 
 def load_text_resource(rel_path):
@@ -149,6 +150,10 @@ def get_markdown_title(file_path):
     except Exception as e:
         print(f"Error reading file: {e}")
         return None
+
+def get_this_markdown_title():
+    global true_target
+    return get_markdown_title(cut_path_by_docs_path(true_target))
 
 #================================================================
 #Tree generation Mechanisms
@@ -251,6 +256,7 @@ true_target = ""
 #vars
 i = 0
 code = ""
+title = ''
 
 #----------------------------------------------------------------
 #Clean folder content
@@ -268,7 +274,7 @@ copy_docs_folder_to_bake('img','img')
 #----------------------------------------------------------------
 #Read patterns and define its functions
 
-pat_page = [load_text_resource('page_1.html'), load_text_resource('page_2.html'), load_text_resource('page_3.html')]
+pat_page = [load_text_resource('page_1.html'), load_text_resource('page_2.html'), load_text_resource('page_3.html'), load_text_resource('page_4.html')]
 pat_folder = [load_text_resource('folder_1.html'), load_text_resource('folder_2.html'), load_text_resource('folder_3.html'), load_text_resource('folder_4.html')]
 pat_option = [load_text_resource('option_1.html'), load_text_resource('option_2.html'), load_text_resource('option_3.html')]
 pat_comment = [load_text_resource('comment_1.html'), load_text_resource('comment_2.html')]
@@ -323,13 +329,15 @@ for root, dirs, files in os.walk(docsPath):
             
             #read file
             code = read_this_file()
-            
+            title = get_this_markdown_title()
             #write
             write_to_file(target, pat_page[0])
-            write_to_file(target, tree_data)
+            write_to_file(target, '<title>' + title + '</title>')
             write_to_file(target, pat_page[1])
-            write_to_file(target, markdown_to_html(code))
+            write_to_file(target, tree_data)
             write_to_file(target, pat_page[2])
+            write_to_file(target, markdown_to_html(code))
+            write_to_file(target, pat_page[3])
 
 #----------------------------------------------------------------
 #end

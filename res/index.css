@@ -124,11 +124,17 @@ dl, ol, ul{
     border-bottom: solid 0.1rem #ffffff6b;
 }
 
-#logo > header{
+#logo > a:nth-child(1){
+    color: white;
+    text-decoration: none;
+}
+
+#logo > a > header{
     font-size: 2.5rem;
 }
-#logo > span{
-    font-size: 2.5rem;
+
+#logo > a:nth-of-type(2){
+    color: white;
 }
 
 /*
