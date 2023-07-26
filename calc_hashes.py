@@ -30,6 +30,7 @@ print("Started...")
 #Consts
 bakePath = "bake/"
 outputFileName = 'hashes.dim'
+blockedExtensions = ['.php']
 
 #----------------------------------------------------------------
 #Calculate hashes
@@ -39,10 +40,15 @@ with open(bakePath + outputFileName, "w") as writer:
     for root, dirs, files in os.walk(bakePath):
         for file in files:
             if file != outputFileName:
-                file = os.path.join(root, file).replace("\\",'/')
-                temp = file[len(bakePath):] + ',' + calculate_file_hash(file) + ';'
-                writer.write(temp + "\n")
-                print(temp)
+                for ext in blockedExtensions:
+                    if file[-len(ext):] == ext:
+                        file = ''
+                        break
+                    if len(file) != 0:                    
+                        file = os.path.join(root, file).replace("\\",'/')
+                        temp = file[len(bakePath):] + ',' + calculate_file_hash(file) + ';'
+                        writer.write(temp + "\n")
+                        print(temp)
 
 #----------------------------------------------------------------
 #end
