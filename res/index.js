@@ -88,7 +88,7 @@ const MobileBurgerClick = () => {
 */
 
 const ToggleFolder = (header) => {
-    header = header.parentNode;
+    header = header.parentElement.parentElement;
     //css
     header.classList.toggle('folder-opened');
     //hide/show
@@ -134,9 +134,8 @@ const ExplorerNavigate = (path) => {
                 element.classList.add('visit')
                 while(element != mainParent){
                     element = element.parentElement;
-                    if(element.firstElementChild)
-                        if(element.firstElementChild.classList.contains('folder'))
-                            element.firstElementChild.click();
+                    if(element.classList.contains('folder'))
+                        element.firstElementChild.firstElementChild.click();
                 }
                 //end scanning
                 return true;

@@ -104,7 +104,7 @@ html, body{
 ================================================
 */
 
-#explorer{
+.screen-xl #explorer{
     padding: 4px 8px;
     margin: 4px 8px;
 }
@@ -117,21 +117,29 @@ html, body{
     padding: 0.25rem 0;
 }
 
-#explorer li > a{
+#explorer li > div{
     padding: 0.2rem;
-    color: rgb(255, 255, 255);
-    text-decoration: none;
-}#explorer li:hover > a{
-    color: #b8fee5;
+}#explorer li > div:hover{
     background-color: #b8fee51f;
 }
 
-#explorer li > a:nth-child(2){
+#explorer li > div > a{
+    color: rgb(255, 255, 255);
+    text-decoration: none;
+}#explorer li > div:hover > a{
+    color: #b8fee5;
+}
+
+#explorer li > div > a:nth-child(2){
     float: right;
     margin-right: 1rem;
 }
 
 #explorer li.visit{
+    background-color: #69d2aa2c;
+}
+
+#explorer li > div.visit{
     background-color: #69d2aa2c;
 }
 
@@ -146,13 +154,13 @@ html, body{
 #explorer .folder{
     color: #69d2aa;
     list-style: disc;
-}#explorer .folder > a:nth-child(1){
+}#explorer .folder > div > a:nth-child(1){
     color: #6ef1bf;
 }
 
 #explorer .folder-opened{
     list-style: circle;
-}#explorer .folder-opened > a:nth-child(1){
+}#explorer .folder-opened > div > a:nth-child(1){
     font-style: italic;
     color: #54a686;
 }
