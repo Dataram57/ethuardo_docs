@@ -35,7 +35,7 @@ def markdown_to_html(markdown_string):
     #by chatGPT
     try:
         # Convert the Markdown string to HTML
-        html_string = markdown.markdown(markdown_string)
+        html_string = markdown.markdown(markdown_string,extensions=['markdown.extensions.extra'])
         return html_string
     except Exception as e:
         print(f"Error converting Markdown to HTML: {e}")

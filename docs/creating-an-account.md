@@ -1,4 +1,4 @@
-# Create an Account
+# Creating an Account
 To create an account, you need to have access to your crypto wallet. And specifically to one of these listed blockchain networks:
 - **Ethereum**
 - **Polygon** (Recommended due to lower transaction fees)

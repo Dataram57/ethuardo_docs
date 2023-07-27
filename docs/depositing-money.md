@@ -1,4 +1,4 @@
-# Deposit Money
+# Depositing Money
 To deposit money only to your account, you need to have an account. It doesn't matter from which address you send money, because in the transaction there is a hidden message including the target account id. The same rules can be applied to donating to a specific user *(Altho, in that case, you would rather want to send money directly to a specific address.)*. It also doesn't matter what available network you choose to use.
 
 So let's begin:

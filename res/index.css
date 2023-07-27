@@ -351,6 +351,29 @@ dl, ol, ul{
     color: rgb(181, 220, 255);
 }
 
+#content table{
+    border-spacing: 0;
+    text-align: center;
+    width: 100%;
+    display: block;
+    justify-content: center;
+}
+
+#content table th{
+    padding: 1rem;
+    border-bottom: 0.1rem solid #FFFFFF;
+}
+
+#content table td{
+    padding: 1rem;
+}
+
+#content table tr > td{
+    border-bottom: 0.1rem solid #ffffff86;
+}#content table tr:last-child > td{
+    border-bottom: none;
+}
+
 /*
 ================================================
 |                                              |
