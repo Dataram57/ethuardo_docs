@@ -36,7 +36,7 @@ skipPaths = ['admin/']
 #Calculate hashes
 
 temp = ''
-with open(targetPath + outputFileName, "w") as writer:
+with open(outputFileName, "w+") as writer:
     for root, dirs, files in os.walk(targetPath):
         for file in files:
             if file != outputFileName:

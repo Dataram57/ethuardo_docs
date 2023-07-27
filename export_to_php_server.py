@@ -3,22 +3,35 @@
 
 import os
 import subprocess
+import hashlib
 
 #================================================================
 #Functions
 
-def write_to_file_direct(file_path, data):
-    make_dir_by_filepath(file_path)
-    #write to file
+def delete_folder_contents(folder_path):
+    #by chatGPT
     try:
-        with open(file_path, 'a+') as file:
+        # Iterate over the folder contents
+        for filename in os.listdir(folder_path):
+            file_path = os.path.join(folder_path, filename)
+            if os.path.isfile(file_path):
+                # If it's a file, delete it
+                os.remove(file_path)
+            elif os.path.isdir(file_path):
+                # If it's a subdirectory, delete its contents recursively
+                delete_folder_contents(file_path)
+                # Delete the empty subdirectory
+                os.rmdir(file_path)
+    except OSError as e:
+        print(f"Error deleting contents of {folder_path}: {e}")
+
+def write_to_file_direct(file_path, data):
+    try:
+        with open(file_path, 'w+') as file:
             file.write(data)
             file.close()
     except Exception as e:
         print(f"Error writing to {file_path}: {e}")
-
-def write_to_file(rel_path, data):
-    write_to_file_direct(bakePath + rel_path, data)
 
 def copy_folder(src_folder, dest_folder):
     try:
@@ -53,6 +66,15 @@ def copy_file_with_os(source_path, destination_path):
     except Exception as e:
         print(f"Error copying file: {e}")
 
+def calculate_sha256_hash(input_string):
+    # Convert the input string to bytes, as hashlib requires bytes-like objects
+    input_bytes = input_string.encode('utf-8')
+
+    # Calculate the SHA-256 hash
+    sha256_hash = hashlib.sha256(input_bytes).hexdigest()
+
+    return sha256_hash
+
 #================================================================
 #Consts
 
@@ -67,14 +89,32 @@ adminPath = bakePath + 'admin/'
 subprocess.run(["python", "bake.py"])
 
 #----------------------------------------------------------------
-#Calc hashes
-
-subprocess.run(["python", "calc_hashes.py"])
-
-#----------------------------------------------------------------
 #Copy source code
 
+if os.path.exists(adminPath):
+    delete_folder_contents(adminPath)
+    os.rmdir(adminPath)
+copy_folder('admin-php', adminPath)
 copy_file_with_os('bake.py', adminPath + 'bake.py')
 copy_file_with_os('calc_hashes.py', adminPath + 'calc_hashes.py')
 copy_folder(docsPath, adminPath + 'docs')
 copy_folder(resPath, adminPath + 'res')
+
+#----------------------------------------------------------------
+#Calc hashes
+
+#print(adminPath + "calc_hashes.py")
+#subprocess.run(["python", adminPath + "calc_hashes.py"])
+
+#----------------------------------------------------------------
+#Setup password
+
+print("\n")
+while True:
+    password = input('Setup new Admin password: ')
+    if input('Repeat password: ') == password:
+        break
+    else:
+        print("Different passwords!\n")
+password = calculate_sha256_hash(password)
+write_to_file_direct(adminPath + 'passhash.key', password)

@@ -249,6 +249,8 @@ print("Started...")
 
 #Consts
 bakePath = "bake/"
+if not os.path.exists(bakePath):
+    bakePath = '../'
 resPath = "res/"
 docsPath = "docs/"
 #vars - informational
