@@ -2,7 +2,6 @@
 #libs
 
 import os
-import hashlib
 import markdown
 
 #================================================================
@@ -18,10 +17,17 @@ def delete_folder_contents(folder_path):
                 # If it's a file, delete it
                 os.remove(file_path)
             elif os.path.isdir(file_path):
-                # If it's a subdirectory, delete its contents recursively
-                delete_folder_contents(file_path)
-                # Delete the empty subdirectory
-                os.rmdir(file_path)
+                # check file skip
+                file_path = file_path.replace("\\",'/')
+                for skip in skip_folder_deletion:
+                    if file_path[len(bakePath):] == skip:
+                        file_path = ''
+                        break
+                if len(file_path) > 0:
+                    # If it's a subdirectory, delete its contents recursively
+                    delete_folder_contents(file_path)
+                    # Delete the empty subdirectory
+                    os.rmdir(file_path)
     except OSError as e:
         print(f"Error deleting contents of {folder_path}: {e}")
 
@@ -262,6 +268,7 @@ title = ''
 #----------------------------------------------------------------
 #Clean folder content
 
+skip_folder_deletion = ['admin']
 delete_folder_contents(bakePath)
 
 #----------------------------------------------------------------
@@ -299,6 +306,7 @@ def render_comment(header):
 #Generate tree
 
 generate_tree(docsPath)
+#write_to_file("tree.html", tree_data)
 
 #----------------------------------------------------------------
 #Scan each file
@@ -331,6 +339,7 @@ for root, dirs, files in os.walk(docsPath):
 
             #read file
             code = read_this_file()
+            code = markdown_to_html(code)
             title = get_this_markdown_title()
             #write
             write_to_file(target, pat_page[0])
@@ -338,7 +347,7 @@ for root, dirs, files in os.walk(docsPath):
             write_to_file(target, pat_page[1])
             write_to_file(target, tree_data)
             write_to_file(target, pat_page[2])
-            write_to_file(target, markdown_to_html(code))
+            write_to_file(target, code)
             write_to_file(target, pat_page[3])
 
 #----------------------------------------------------------------

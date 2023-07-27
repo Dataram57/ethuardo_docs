@@ -1,0 +1,1 @@
+<?php $r=$_SERVER['DOCUMENT_ROOT'].'/';include $r.'start.html';echo 'meta';include $r.'tree.html';include 'index.part.html';include $r.'end.html';
