@@ -1,4 +1,18 @@
 <?php
+//Check password
+if(!isset($_POST['password'])){
+	echo "This specific page is admin's page.";
+	return;
+}
+$password = $_POST['password'] ?? '';
+$password = hash('sha256', $password);
+$passhash = file_get_contents('passhash.key');
+if($password != $passhash){
+    echo 'Wrong Password!!!';
+	return;
+}
+
+
 //Custom Dimperpreter
 class Dimperpreter {
     var $code;		//source

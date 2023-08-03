@@ -1,8 +1,21 @@
 #================================================================
+#Config
+
+bakePath = "bake/"
+resPath = "res/"
+docsPath = "docs/"
+
+#================================================================
 #libs
 
 import os
 import markdown
+
+#================================================================
+#Correct config
+
+if not os.path.exists(bakePath):
+    bakePath = '../'
 
 #================================================================
 #Functions
@@ -247,12 +260,6 @@ if os.system('clear'):
     os.system('cls')
 print("Started...")
 
-#Consts
-bakePath = "bake/"
-if not os.path.exists(bakePath):
-    bakePath = '../'
-resPath = "res/"
-docsPath = "docs/"
 #vars - informational
 target = ""
 target_dir = ""
@@ -270,7 +277,7 @@ title = ''
 #----------------------------------------------------------------
 #Clean folder content
 
-skip_folder_deletion = ['admin']
+skip_folder_deletion = ['.admin']
 delete_folder_contents(bakePath)
 
 #----------------------------------------------------------------

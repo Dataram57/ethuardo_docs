@@ -1,3 +1,4 @@
 bake/*
 priv/*
 hashes.dim
+remote_config.json

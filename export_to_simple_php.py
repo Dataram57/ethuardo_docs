@@ -1,4 +1,12 @@
 #================================================================
+#Config
+
+bakePath = "bake/"
+resPath = "res/"
+docsPath = "docs/"
+adminPath = '.admin/' 
+
+#================================================================
 #libs
 
 import os
@@ -76,17 +84,14 @@ def calculate_sha256_hash(input_string):
     return sha256_hash
 
 #================================================================
-#Consts
+#Correct config
 
-bakePath = "bake/"
-resPath = "res/"
-docsPath = "docs/"
-adminPath = bakePath + 'admin/' 
+adminPath = bakePath + adminPath
 
 #================================================================
-#Bake
+#Clear bake path
 
-subprocess.run(["python", "bake.py"])
+delete_folder_contents(bakePath)
 
 #----------------------------------------------------------------
 #Copy source code
@@ -103,8 +108,8 @@ copy_folder(resPath, adminPath + 'res')
 #----------------------------------------------------------------
 #Calc hashes
 
-#print(adminPath + "calc_hashes.py")
-#subprocess.run(["python", adminPath + "calc_hashes.py"])
+print(adminPath + "calc_hashes.py")
+subprocess.run(["python", adminPath + "calc_hashes.py"])
 
 #----------------------------------------------------------------
 #Setup password
