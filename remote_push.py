@@ -77,6 +77,7 @@ for s in server_hashes:
             #Upload and replace old file
             print("M:", l)
             post_data['command'] = 'M'
+            post_data['target'] = l[0]
             post_data['hash'] = l[1]
             file = open(docsPath + l[0], 'rb')
             response = requests.post(config['address'], data = post_data, files = {'file': (l[0], file)})
@@ -90,18 +91,19 @@ while True:
 for s in server_hashes:
     #Delete file
     print("D:", s)
+    post_data['command'] = 'D'
+    post_data['target'] = s[0]
+    response = requests.post(config['address'], data = post_data)
+    print(response.text)
+
 for l in local_hashes:
     #Upload new file
     print("A:", l)
+    post_data['command'] = 'A'
+    post_data['target'] = l[0]
+    post_data['hash'] = l[1]
+    file = open(docsPath + l[0], 'rb')
+    response = requests.post(config['address'], data = post_data, files = {'file': (l[0], file)})
+    print(response.text)
 
-#my_array[:index_to_remove] + my_array[index_to_remove + 1:]
-
-
-#================================================================
-
-
-#data = {
-#    'password': config['password']
-#}
-#response = requests.post(config['address'], data)
-#print(response.text)
+print('Done.')

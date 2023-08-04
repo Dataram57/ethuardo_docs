@@ -97,33 +97,37 @@ $command = $_POST['command'] ?? '';
 //Modify(docs_path, new_hash, FILE['file'])
 if($command == 'M'){
 	echo 'M: ';
+	$relPath = $_POST['target'] ?? false;
 	$hash = $_POST['hash'] ?? false;
 	if($_FILES['file']){
-		if($hash){
-			//Create directory
-			$relPath = trim($_FILES['file']['full_path']);
-			$targetPath = $docsPath . $relPath;
-			createDirectories(substr($targetPath, 0, strrpos($targetPath, '/')));
-			//Replace
-			move_uploaded_file($_FILES["file"]["tmp_name"], $targetPath);
-			//Update hash
-			$dimp = new Dimperpreter(file_get_contents($hashesPath));
-			$line = $dimp->Next();
-			while($line){
-				if(trim($line[0]) == $relPath){
-					file_put_contents($hashesPath, $dimp->ReadRawBeforeLast() . "\n" . $relPath . ',' . $hash . ';' . $dimp->ReadRawAfterLast());
-					break;
-				}
+		if($relPath){
+			if($hash){
+				//Create directory
+				$targetPath = $docsPath . $relPath;
+				createDirectories(substr($targetPath, 0, strrpos($targetPath, '/')));
+				//Replace
+				move_uploaded_file($_FILES["file"]["tmp_name"], $targetPath);
+				//Update hash
+				$dimp = new Dimperpreter(file_get_contents($hashesPath));
 				$line = $dimp->Next();
+				while($line){
+					if(trim($line[0]) == $relPath){
+						file_put_contents($hashesPath, $dimp->ReadRawBeforeLast() . "\n" . $relPath . ',' . $hash . ';' . $dimp->ReadRawAfterLast());
+						break;
+					}
+					$line = $dimp->Next();
+				}
+				if(!$line)
+					echo "Couldn't find the entry in listed files.";
+				//end
+				else
+					echo "Done.";
 			}
-			if(!$line)
-				echo "Couldn't find the entry in listed files.";
-			//end
 			else
-				echo "Done.";
+				echo "No hash of the file provided.";
 		}
 		else
-			echo "No hash of the file provided.";
+			echo 'No target path provided.';
 	}
 	else
 		echo "No file uploaded.";
@@ -131,17 +135,62 @@ if($command == 'M'){
 //================================================================
 //Delete(docs_path)
 else if($command == 'D'){
-	echo 'D';
+	echo 'D: ';
+	$relPath = $_POST['target'] ?? false;
+	if($relPath){
+		//remove hash
+		$dimp = new Dimperpreter(file_get_contents($hashesPath));
+		$line = $dimp->Next();
+		while($line){
+			if(trim($line[0]) == $relPath){
+				//found matching relative path
+				//remove it from the list
+				file_put_contents($hashesPath, $dimp->ReadRawBeforeLast() . $dimp->ReadRawAfterLast());
+				//delete file
+				unlink($docsPath . $relPath);
+				echo 'Done';
+				break;
+			}
+			$line = $dimp->Next();
+		}
+		if(!$line)
+			echo "Couldn't find the entry in listed files.";
+	}
+	else
+		echo "No target pointed.";
 }
 //================================================================
 //Add(docs_path, new_hash, FILE['file'])
 else if($command == 'A'){
-	echo 'A';
+	echo 'A: ';
+	$relPath = $_POST['target'] ?? false;
+	$hash = $_POST['hash'] ?? false;
+	if($_FILES['file']){
+		if($relPath){
+			if($hash){
+				//Create directory
+				$targetPath = $docsPath . $relPath;
+				createDirectories(substr($targetPath, 0, strrpos($targetPath, '/')));
+				//Replace
+				move_uploaded_file($_FILES["file"]["tmp_name"], $targetPath);
+				//Add hash
+				file_put_contents($hashesPath, file_get_contents($hashesPath) . "\n" . $relPath . ',' . $hash . ';');
+				//end
+				echo "Done.";
+			}
+			else
+				echo "No hash of the file provided.";
+		}
+		else
+			echo 'No target path provided.';
+	}
+	else
+		echo "No file uploaded.";
 }
 //================================================================
 //Bake
 else if($command == 'B'){
-	echo 'B';
+	echo shell_exec("python bake.py");
 }
 //================================================================
 //?
