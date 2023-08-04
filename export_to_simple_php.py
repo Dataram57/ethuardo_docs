@@ -94,22 +94,22 @@ adminPath = bakePath + adminPath
 delete_folder_contents(bakePath)
 
 #----------------------------------------------------------------
+#Calc hashes
+
+subprocess.run(["python", "calc_hashes.py"])
+
+#----------------------------------------------------------------
 #Copy source code
 
 if os.path.exists(adminPath):
     delete_folder_contents(adminPath)
     os.rmdir(adminPath)
-copy_folder('admin-php', adminPath)
+copy_folder('admin-simple_php', adminPath)
 copy_file_with_os('bake.py', adminPath + 'bake.py')
 copy_file_with_os('calc_hashes.py', adminPath + 'calc_hashes.py')
+copy_file_with_os('hashes.dim', adminPath + 'hashes.dim')
 copy_folder(docsPath, adminPath + 'docs')
 copy_folder(resPath, adminPath + 'res')
-
-#----------------------------------------------------------------
-#Calc hashes
-
-print(adminPath + "calc_hashes.py")
-subprocess.run(["python", adminPath + "calc_hashes.py"])
 
 #----------------------------------------------------------------
 #Setup password

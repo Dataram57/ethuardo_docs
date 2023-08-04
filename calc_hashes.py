@@ -30,7 +30,6 @@ print("Started...")
 #Consts
 targetPath = "docs/"
 outputFileName = 'hashes.dim'
-skipPaths = ['admin/']
 
 #----------------------------------------------------------------
 #Calculate hashes
@@ -40,15 +39,10 @@ with open(outputFileName, "w+") as writer:
     for root, dirs, files in os.walk(targetPath):
         for file in files:
             if file != outputFileName:
-                file = os.path.join(root, file).replace("\\",'/')
-                for sus_skip in skipPaths:
-                    if file[len(targetPath):len(targetPath)+len(sus_skip)] == sus_skip:
-                        file = ''
-                        break
-                if len(file) != 0:                    
-                    temp = file[len(targetPath):] + ',' + calculate_file_hash(file) + ';'
-                    writer.write(temp + "\n")
-                    print(temp)
+                file = os.path.join(root, file).replace("\\",'/')           
+                temp = file[len(targetPath):] + ',' + calculate_file_hash(file) + ';'
+                writer.write(temp + "\n")
+                print(temp)
 
 #----------------------------------------------------------------
 #end
